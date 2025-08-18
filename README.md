@@ -21,6 +21,8 @@
 3. 依存パッケージをインストールします:
    ```
    npm install
+   npm i multer
+   npm i -D @types/multer @types/express @types/node
    ```
 
 
