@@ -5,14 +5,17 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
-export async function doBusinessLogic(data: { imagePath: string; prompt: string }): Promise<{ text: string; imageFilePath?: string }> {
+export async function doBusinessLogic(data: { imagePath: string }): Promise<{ text: string; imageFilePath?: string }> {
   const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_GENAI_API_KEY });
 
   // 画像データを読み込む
   const base64Image = readImageData(data.imagePath);
 
+  // .env から prompt を取得
+  const prompt = getPromptFromEnv();
+
   // Gemini APIを呼び出す
-  const response = await callGeminiAPI(ai, data.prompt, base64Image);
+  const response = await callGeminiAPI(ai, prompt, base64Image);
 
   // ディレクトリを作成
   const dirPath = path.join(__dirname, '..', '..', 'gemini-native-image');
@@ -30,7 +33,7 @@ function readImageData(imagePath: string): string {
   return imageData.toString("base64");
 }
 
-// Gemini APIを呼び出す関数
+// Gemini API を呼び出す関数
 async function callGeminiAPI(ai: GoogleGenAI, prompt: string, base64Image: string) {
   const contents = [
     { text: prompt },
@@ -49,6 +52,17 @@ async function callGeminiAPI(ai: GoogleGenAI, prompt: string, base64Image: strin
       responseModalities: [Modality.TEXT, Modality.IMAGE],
     },
   });
+}
+
+// .env から prompt を取得する関数
+function getPromptFromEnv(): string {
+  // 優先順位をつけて環境変数を取得
+  const prompt =
+    process.env.GEMINI_PROMPT ?? process.env.PROMPT_TEXT ?? process.env.PROMPT ?? "";
+  if (!prompt || prompt.trim().length === 0) {
+    throw new Error("Geminiのプロンプトが環境変数に設定されていません。.env に GEMINI_PROMPT を設定してください。");
+  }
+  return prompt;
 }
 
 // ディレクトリを作成する関数
@@ -87,3 +101,20 @@ function processResponse(response: any, dirPath: string): { resultText: string; 
 
   return { resultText, imageFilePath };
 }
+
+// ファイルアップロードサービス
+export const uploadService = async (file: Express.Multer.File) => {
+  const ext = path.extname(file.originalname).toLowerCase();
+
+  if (ext !== '.png') {
+    // PNG以外は削除
+    await fs.promises.unlink(file.path);
+    throw new Error('Only PNG files are allowed');
+  }
+
+  // 正常ならファイル情報を返す
+  return {
+    message: 'File uploaded',
+    filename: file.filename,
+  };
+};
