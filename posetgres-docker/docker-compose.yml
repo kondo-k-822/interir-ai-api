@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_container
+    environment:
+      POSTGRES_DB: interirAiDB
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      TZ: Asia/Tokyo   # ← タイムゾーン設定
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "15432:5432"
+
+volumes:
+  postgres_data:

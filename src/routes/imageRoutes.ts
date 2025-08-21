@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { imageMakeHandle } from '../controllers/controller';
 import { uploadController } from '../controllers/uploadController';
+import { authController } from '../controllers/authController';
 import multer from 'multer';
 import path from 'path';
 
@@ -25,5 +26,10 @@ router.post('/upload', upload.single('file'), uploadController);
 
 // 2. 画像処理
 router.post('/imageMake', imageMakeHandle);
+
+// ========== 認証系 ==========
+router.post("/signup", authController.signup);
+router.post("/login", authController.login);
+router.post("/logout", authController.logout);
 
 export default router;
