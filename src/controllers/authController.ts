@@ -13,9 +13,9 @@ export const authController = {
   },
 
   login: async (req: Request, res: Response) => {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
     try {
-      const user = await authService.login(email, password);
+      const user = await authService.login(username, password);
 
       // セッションに保存
       (req.session as any).user = user;
