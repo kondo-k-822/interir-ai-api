@@ -30,7 +30,7 @@ To set up and run the PostgreSQL environment, follow these steps:
 3. **Access the PostgreSQL database**:
    You can connect to the PostgreSQL database using a PostgreSQL client or through the command line. The default connection parameters are:
    - Host: `localhost`
-   - Port: `5432`
+   - Port: `15432`
    - User: `postgres`
    - Password: `your_password` (replace with the password set in the `docker-compose.yml`)
 

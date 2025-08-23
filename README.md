@@ -7,6 +7,8 @@
 - [インストール](#インストール)
 - [使い方](#使い方)
 - [エンドポイント](#エンドポイント)
+  - [インテリア提案生成 API](#post-apiimagemake)
+  - [認証 API](#認証-api)
 
 ## インストール
 
@@ -21,8 +23,7 @@
 3. 依存パッケージをインストールします:
    ```
    npm install
-   npm i multer
-   npm i -D @types/multer @types/express @types/node
+
    ```
 
 
@@ -47,12 +48,85 @@ npm start
 
 インテリアデザインの提案を生成します。
 
-- **リクエストボディ**:
+* **リクエストボディ**
+
   ```json
   {
-  "imagePath": "images/sample.png",
-  "prompt": "現在の写真に合う家具を配置してください"
+    "imagePath": "images/sample.png"
   }
+  ```
+
+  ## 🔑 認証 API
+
+### 1. サインアップ（ユーザー登録）
+
+* **URL**: `/signup`
+* **メソッド**: `POST`
+
+**リクエストボディ**
+
+```json
+{
+  "email": "user@example.com",
+  "password": "P@ssword123!"
+}
+```
+
+**レスポンス (成功時)**
+
+```json
+{
+  "message": "ユーザー登録完了",
+  "user": {
+    "id": 1,
+    "email": "user@example.com"
+  }
+}
+```
+
+---
+
+### 2. ログイン
+
+* **URL**: `/login`
+* **メソッド**: `POST`
+
+**リクエストボディ**
+
+```json
+{
+  "username": "user@example.com",
+  "password": "P@ssword123!"
+}
+```
+
+**レスポンス (成功時)**
+
+```json
+{
+  "message": "ログイン成功",
+  "user": {
+    "id": 1,
+    "email": "user@example.com"
+  }
+}
+```
+
+---
+
+### 3. ログアウト
+
+* **URL**: `/logout`
+* **メソッド**: `POST`
+* **リクエストボディ**: なし
+
+**レスポンス (成功時)**
+
+```json
+{
+  "message": "ログアウトしました"
+}
+```
 
 ## Gemini API キー
 以下を参考に取得すること。
